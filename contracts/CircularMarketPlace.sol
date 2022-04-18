@@ -60,8 +60,12 @@ contract CircularMarketPlace {
         delete orderList.Offers[msg.sender][oId][offId];
     }
     
-    function getOffer(address user, uint oId) public view returns (Offer[] memory) {
+    function getOffers(address user, uint oId) public view returns (Offer[] memory) {
         return orderList.Offers[user][oId];
+    }
+
+    function getOffer(address user, uint oId, uint offId) public view returns (Offer memory) {
+        return orderList.Offers[user][oId][offId];
     }
 
     function buy(uint256 OrderID, address seller) public {
