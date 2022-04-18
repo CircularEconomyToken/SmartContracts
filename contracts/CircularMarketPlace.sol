@@ -49,6 +49,7 @@ contract CircularMarketPlace {
     }
 
     function addOffer(Offer memory newOffer, address orderOwner, uint oId) public {
+        require(msg.sender != orderOwner);
         orderList.Offers[orderOwner][oId].push(newOffer);
     }
 
