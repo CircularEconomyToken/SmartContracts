@@ -29,11 +29,15 @@ contract CircularMarketPlace {
         mapping(address => mapping(uint256 => Offer[])) Offers;
     }
 
+    address[] sellers;
+
     constructor() {}
 
     function addOrder(Order memory newOrder) public {
+        require(nextOrderID(msg.sender) == newOrder.orderId);
         orderList.orders[msg.sender].push(newOrder);
         orderId[msg.sender] = orderId[msg.sender] + 1;
+        sellers.push(msg.sender);
     }
 
     function updateOrder(Order memory newOrder, uint oId) public {
@@ -69,6 +73,11 @@ contract CircularMarketPlace {
 
     function getOrders(address user) public view returns (Order[] memory) {
         return orderList.orders[user];
+    }
+
+    
+    function getAllSellers() public view returns (address[] memory) {
+        return sellers;
     }
 
     function getOrder(address user, uint id) public view returns (Order memory) {
