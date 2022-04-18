@@ -59,12 +59,14 @@ contract CircularMarketPlace {
 
     function updateOffer(Offer memory newOffer, address Owner,  uint oId, uint offId) public {
         require(keccak256(abi.encodePacked((orderList.Offers[Owner][oId][offId].status))) != keccak256(abi.encodePacked(("Deleted"))));
+        require(msg.sender == orderList.Offers[Owner][oId][offId]._address);
         orderList.Offers[Owner][oId][offId] = newOffer;
     }
 
-    function deleteOffer(uint oId, uint offId) public {
-        delete orderList.Offers[msg.sender][oId][offId];
-        orderList.Offers[msg.sender][oId][offId].status = "Deleted";
+    function deleteOffer(uint oId, uint offId, address Owner) public {
+        require(msg.sender == orderList.Offers[Owner][oId][offId]._address);
+        delete orderList.Offers[Owner][oId][offId];
+        orderList.Offers[Owner][oId][offId].status = "Deleted";
     }
     
     function getOffers(address user, uint oId) public view returns (Offer[] memory) {
