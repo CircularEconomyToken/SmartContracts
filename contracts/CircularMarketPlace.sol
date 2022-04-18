@@ -5,7 +5,6 @@ contract CircularMarketPlace {
     Orders orderList;
     mapping(address => uint256) orderId;
     struct Offer {
-        uint256 orderId;
         uint256 price;
         string usecase;
         uint256 earliestBlock;
