@@ -8,7 +8,7 @@ contract CircularMarketPlace {
         uint256 price;
         string usecase;
         uint256 earliestBlock;
-        string _address;
+        address _address;
         string status;
     }
     struct Order {
@@ -53,6 +53,7 @@ contract CircularMarketPlace {
 
     function addOffer(Offer memory newOffer, address orderOwner, uint oId) public {
         require(msg.sender != orderOwner);
+        require(msg.sender == newOffer._address);
         orderList.Offers[orderOwner][oId].push(newOffer);
     }
 
