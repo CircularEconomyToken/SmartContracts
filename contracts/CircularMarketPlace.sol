@@ -36,8 +36,24 @@ contract CircularMarketPlace {
         orderId[msg.sender] = orderId[msg.sender] + 1;
     }
 
+    function updateOrder(Order memory newOrder, uint oId) public {
+        orderList.orders[msg.sender][oId] = newOrder;
+    }
+
+    function deleteOrder(uint oId) public {
+        delete orderList.orders[msg.sender][oId];
+    }
+
     function addOffer(Offer memory newOffer, address orderOwner, uint oId) public {
         orderList.Offers[orderOwner][oId].push(newOffer);
+    }
+
+    function updateOffer(Offer memory newOffer, uint oId, uint offId) public {
+        orderList.Offers[msg.sender][oId][offId] = newOffer;
+    }
+
+    function deleteOffer(uint oId, uint offId) public {
+        delete orderList.Offers[msg.sender][oId][offId];
     }
     
 
