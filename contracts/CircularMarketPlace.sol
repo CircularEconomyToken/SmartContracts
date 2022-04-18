@@ -9,6 +9,7 @@ contract CircularMarketPlace {
         string usecase;
         uint256 earliestBlock;
         string _address;
+        string status;
     }
     struct Order {
         uint256 orderId;
@@ -22,6 +23,7 @@ contract CircularMarketPlace {
         uint256 price;
         address buyer;
         string location;
+        string status;
     }
     struct Orders {
         mapping(address => Order[]) orders;
@@ -39,12 +41,14 @@ contract CircularMarketPlace {
         sellers.push(msg.sender);
     }
 
-    function updateOrder(Order memory newOrder, uint oId) public {
-        orderList.orders[msg.sender][oId] = newOrder;
+    function updateOrder(Order memory newOrder) public {
+        require(keccak256(abi.encodePacked((orderList.orders[msg.sender][newOrder.orderId].status))) != keccak256(abi.encodePacked(("Deleted"))));
+        orderList.orders[msg.sender][newOrder.orderId] = newOrder;
     }
 
     function deleteOrder(uint oId) public {
         delete orderList.orders[msg.sender][oId];
+        orderList.orders[msg.sender][oId].status = "Deleted";
     }
 
     function addOffer(Offer memory newOffer, address orderOwner, uint oId) public {
@@ -53,11 +57,13 @@ contract CircularMarketPlace {
     }
 
     function updateOffer(Offer memory newOffer, uint oId, uint offId) public {
+        require(keccak256(abi.encodePacked((orderList.Offers[msg.sender][oId][offId].status))) != keccak256(abi.encodePacked(("Deleted"))));
         orderList.Offers[msg.sender][oId][offId] = newOffer;
     }
 
     function deleteOffer(uint oId, uint offId) public {
         delete orderList.Offers[msg.sender][oId][offId];
+        orderList.Offers[msg.sender][oId][offId].status = "Deleted";
     }
     
     function getOffers(address user, uint oId) public view returns (Offer[] memory) {
