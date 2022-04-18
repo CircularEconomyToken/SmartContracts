@@ -3,48 +3,60 @@ pragma solidity ^0.8.0;
 
 contract CircularMarketPlace {
     Orders orderList;
-    uint256 orderId;
-    struct Offer{
+    mapping(address => uint256) orderId;
+    struct Offer {
         uint256 orderId;
         uint256 price;
         string usecase;
-        uint earliestBlock;
+        uint256 earliestBlock;
         string _address;
     }
-    struct Order{
-        uint256  orderId;
+    struct Order {
+        uint256 orderId;
         string name;
         string unit;
-        uint categories;
+        uint256 categories;
         uint256 quantity;
-        uint expirationBlock;
+        uint256 expirationBlock;
         string itemDescription;
-        uint condition;
+        uint256 condition;
         uint256 price;
         address buyer;
         string location;
     }
-    struct Orders{
+    struct Orders {
         mapping(address => Order[]) orders;
-        mapping(uint256 => Offer[]) Offers;
-
+        mapping(address => mapping(uint256 => Offer[])) Offers;
     }
 
-
-    constructor() {
-        
-    }
+    constructor() {}
 
     function addOrder(Order memory newOrder) public {
         orderList.orders[msg.sender].push(newOrder);
-        orderId = orderId + 1;
+        orderId[msg.sender] = orderId[msg.sender] + 1;
     }
 
-    function nextOrderID() public view returns(uint256) {
-        return orderId;
+    function addOffer(Offer memory newOffer, address orderOwner, uint oId) public {
+        orderList.Offers[orderOwner][oId].push(newOffer);
+    }
+    
+
+    function buy(uint256 OrderID, address seller) public {
+        if (orderList.orders[seller][OrderID].buyer == address(0)) {
+            orderList.orders[seller][OrderID].buyer = seller;
+        }
     }
 
-    function getOrders(address user) public view returns(Order[] memory){
+    function nextOrderID(address sender) public view returns (uint256) {
+        return orderId[sender];
+    }
+
+    function getOrders(address user) public view returns (Order[] memory) {
         return orderList.orders[user];
     }
+
+    function getOrder(address user, uint id) public view returns (Order memory) {
+        return orderList.orders[user][id];
+    }
+
 }
